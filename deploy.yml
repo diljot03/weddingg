@@ -1,0 +1,61 @@
+# Builds the app and publishes it to GitHub Pages on every push to main.
+# One-time setup: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # Project sites live at https://<user>.github.io/<repo>/, so the app needs
+      # "/<repo>" in front of its paths. A <user>.github.io repo needs none.
+      - name: Work out the site path
+        run: |
+          REPO="${{ github.event.repository.name }}"
+          if [[ "$REPO" == *.github.io ]]; then echo "NEXT_PUBLIC_BASE_PATH=" >> "$GITHUB_ENV"; else echo "NEXT_PUBLIC_BASE_PATH=/$REPO" >> "$GITHUB_ENV"; fi
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          # Optional: add these under Settings → Secrets and variables → Actions
+          # to switch from demo mode to shared Supabase data.
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_DEMO_HOST_CODE: ${{ secrets.NEXT_PUBLIC_DEMO_HOST_CODE }}
+          NEXT_TELEMETRY_DISABLED: 1
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

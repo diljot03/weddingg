@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Royal Indian default; replaced at runtime by lib/themes.ts */
+  --primary: 88 24 38;
+  --on-primary: 250 245 238;
+  --page: 250 245 238;
+  --card: 255 252 247;
+  --blush: 232 213 216;
+  --gold: 198 163 85;
+  --on-gold: 62 15 26;
+  --ink: 46 20 24;
+  --muted: 122 90 96;
+  --font-script: 'Great Vibes', cursive;
+  --script-style: normal;
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'EB Garamond', Georgia, serif;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html { -webkit-tap-highlight-color: transparent; scroll-padding-top: calc(var(--safe-top) + 64px); }
+body {
+  @apply bg-page text-ink font-body antialiased;
+  font-size: 17px;
+  line-height: 1.55;
+  padding-bottom: var(--safe-bottom);
+}
+.font-script { font-style: var(--script-style); font-weight: 400; line-height: 1.1; }
+h1, h2, h3 { @apply font-heading; }
+
+:focus-visible { outline: 2px solid rgb(var(--gold)); outline-offset: 2px; }
+
+@layer components {
+  .card { @apply rounded-2xl border border-gold/30 bg-card; box-shadow: 0 1px 0 rgb(var(--gold) / 0.15), 0 8px 24px -16px rgb(var(--primary) / 0.35); }
+  .label { @apply text-[11px] font-semibold uppercase tracking-[0.18em] text-muted; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-semibold uppercase tracking-[0.14em] transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-gold { @apply btn bg-gold text-on-gold hover:brightness-105; box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35), 0 6px 16px -8px rgb(var(--gold) / 0.9); }
+  .btn-primary { @apply btn bg-primary text-on-primary hover:brightness-110; }
+  .btn-ghost { @apply btn border border-gold/50 bg-transparent text-primary hover:bg-blush/40; }
+  .input { @apply w-full rounded-xl border border-gold/40 bg-card px-4 py-3 text-base text-ink placeholder:text-muted/70 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30; }
+  .pill { @apply inline-flex items-center gap-2 rounded-full border border-gold/50 bg-card px-3.5 py-2 text-sm text-ink transition hover:bg-blush/50 active:scale-[0.98]; }
+  .segmented { @apply flex rounded-full border border-gold/40 bg-blush/40 p-1; }
+  .segmented > button { @apply flex-1 rounded-full px-3 py-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-muted transition; }
+  .segmented > button[aria-pressed='true'] { @apply bg-primary text-on-primary shadow; }
+}
+
+@layer utilities {
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .glass { background: rgb(255 255 255 / 0.16); backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%); border: 1px solid rgb(255 255 255 / 0.35); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

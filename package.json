@@ -1,0 +1,28 @@
+{
+  "name": "wedding-guest-companion",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.118.0",
+    "@vladmandic/face-api": "1.7.15",
+    "framer-motion": "14.1.0",
+    "lucide-react": "1.59.0",
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "autoprefixer": "10.4.20",
+    "esbuild": "^0.28.2",
+    "postcss": "8.4.49",
+    "tailwindcss": "3.4.19",
+    "typescript": "5.9.3"
+  }
+}
