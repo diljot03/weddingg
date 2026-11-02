@@ -4,9 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "standalone": "node scripts/build-standalone.mjs"
+    "build": "next build"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.118.0",

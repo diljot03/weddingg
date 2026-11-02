@@ -31,13 +31,14 @@ With no Supabase keys the app runs in **demo mode**. Data is stored in the brows
    NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
    ```
 
-## 3. Deploy
+## 3. Publish on GitHub Pages
 
-**Vercel:** import the repo, add the two `NEXT_PUBLIC_SUPABASE_*` variables and deploy. No other configuration is needed.
+1. Create a **public** repository on GitHub (free GitHub Pages needs a public repo) and upload all these files, including the `.github` folder.
+2. In the repository go to **Settings → Pages → Build and deployment → Source** and choose **GitHub Actions**.
+3. Open the **Actions** tab. The "Deploy to GitHub Pages" workflow runs on every push to `main`. If it ran before step 2, click it and choose **Re-run all jobs**.
+4. When it shows a green tick, the app is live at `https://<your-username>.github.io/<repo-name>/`.
 
-**Netlify:** import the repo and add the same variables. `netlify.toml` is already included.
-
-The site must be served over HTTPS (both hosts do this) for the install button and service worker to work.
+To use Supabase instead of demo mode, add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` under **Settings → Secrets and variables → Actions → New repository secret**, then re-run the workflow. To change the demo host code, add a secret named `NEXT_PUBLIC_DEMO_HOST_CODE`.
 
 ## 4. Make it yours
 
@@ -59,7 +60,7 @@ Hosts can also post announcements (Chat tab), mark songs as played, update Sange
 | --- | --- |
 | Sign-in | Each guest gets an anonymous Supabase session. Signing out removes them from the guest list. The host role can only be granted by the `claim_host` database function. |
 | My photos | Shows photos the guest uploaded, plus photos their face appears in. Face matching runs on the phone (`@vladmandic/face-api`, models loaded from jsDelivr). Only face measurements are stored, never sent to a third party. Guests turn it on with **Scan selfie**. |
-| Song search | `/api/songs` searches Apple's public iTunes catalogue on the server and returns title, artist and artwork. Guests can also type any song. |
+| Song search | Searches Apple's public iTunes catalogue straight from the browser (`lib/songSearch.ts`) for title, artist and artwork. Guests can also type any song. |
 | Downloads | Photo downloads use Supabase's `?download=` link so they save instead of opening. |
 | Offline | The service worker caches the app shell, fonts and icons. Live data (chat, photos) needs a connection. |
 | Time zone | Event times are entered and shown in India Standard Time (see `lib/format.ts` and `components/HostStudio.tsx` to change). |
@@ -67,7 +68,8 @@ Hosts can also post announcements (Chat tab), mark songs as played, update Sange
 ## Project layout
 
 ```
-app/                 layout, page shell, /api/songs route
+app/                 layout and page shell
+.github/workflows/   GitHub Pages build and deploy
 components/          Cover (hero, countdown, invitation), TabBar, Onboarding,
                      HostStudio, InstallBanner, tabs/*
 lib/db.ts            data layer: Supabase + realtime, or local demo store
